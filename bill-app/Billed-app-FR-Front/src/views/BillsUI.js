@@ -5,6 +5,7 @@ import LoadingPage from "./LoadingPage.js"
 import Actions from './Actions.js'
 
 const row = (bill) => {
+
   return (`
     <tr>
       <td>${bill.type}</td>
@@ -47,6 +48,12 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
+
+  bills = bills.sort((a, b) => (a.replaced < b.replaced) ? 1 : -1)
+
+  bills.map(bill => {
+    console.log(bill.replaced)
+  })
 
   return (`
     <div class='layout'>
