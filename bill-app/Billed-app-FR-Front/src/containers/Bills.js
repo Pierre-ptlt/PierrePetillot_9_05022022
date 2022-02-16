@@ -34,9 +34,8 @@ export default class {
       .list()
       .then(snapshot => {
         const bills = snapshot
-          snapshot.map(doc => {
-            const replaced = doc.date.replace(/[^0-9]/g, '');
-            doc.replaced = replaced;
+        .map(doc => {
+            doc.replaced = doc.date.replace(/[^0-9]/g, '');
             try {
               return {
                 ...doc,

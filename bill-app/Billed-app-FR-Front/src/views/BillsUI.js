@@ -21,7 +21,17 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  // return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+
+  if (data && data.length) {
+    data.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    })
+    return data.map((bill) => row(bill)).join("")
+  }
+  else {
+    return ""
+  }
 }
 
 export default ({ data: bills, loading, error }) => {
@@ -51,9 +61,9 @@ export default ({ data: bills, loading, error }) => {
 
   bills = bills.sort((a, b) => (a.replaced < b.replaced) ? 1 : -1)
 
-  bills.map(bill => {
-    console.log(bill.replaced)
-  })
+  // bills.map(bill => {
+  //   console.log(bill.replaced)
+  // })
 
   return (`
     <div class='layout'>
