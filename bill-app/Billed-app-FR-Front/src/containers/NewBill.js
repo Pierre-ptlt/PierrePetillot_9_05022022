@@ -14,6 +14,7 @@ export default class NewBill {
     this.fileName = null
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
+    document.getElementById('btn-send-bill').disabled = true;
   }
   handleChangeFile = e => {
     e.preventDefault()
@@ -24,7 +25,6 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-    document.getElementById('btn-send-bill').disabled = true;
     if(fileName.includes(".jpg") || fileName.includes(".jpeg") || fileName.includes (".png"))
     {
       document.getElementById('btn-send-bill').disabled = false;
@@ -45,6 +45,7 @@ export default class NewBill {
     }
     else
     {
+      document.getElementById('btn-send-bill').disabled = true;
       alert("Veuillez choisir un fichier au format jpg, jpeg ou PNG");
     }
   }
