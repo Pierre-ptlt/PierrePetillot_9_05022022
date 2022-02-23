@@ -59,7 +59,7 @@ export default ({ data: bills, loading, error }) => {
     return ErrorPage(error)
   }
 
-  bills = bills.sort((a, b) => (a.replaced < b.replaced) ? 1 : -1)
+  bills = bills.sort((a, b) => (a.dateRaw < b.dateRaw) ? 1 : -1)
 
   // bills.map(bill => {
   //   console.log(bill.replaced)

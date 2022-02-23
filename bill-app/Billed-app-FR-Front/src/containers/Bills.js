@@ -35,7 +35,10 @@ export default class {
       .then(snapshot => {
         const bills = snapshot
         .map(doc => {
-            doc.replaced = doc.date.replace(/[^0-9]/g, '');
+            if(doc.date)
+            {
+              doc.dateRaw = doc.date.replace(/[^0-9]/g, '');
+            }
             try {
               return {
                 ...doc,
