@@ -3,7 +3,6 @@
  */
 
 import {screen, waitFor, getByTestId, fireEvent} from "@testing-library/dom"
-import userEvent from "@testing-library/user-event";
 import BillsUI from "../views/BillsUI.js"
 import Bills from "../containers/Bills.js";
 import { bills } from "../fixtures/bills.js"
@@ -11,11 +10,9 @@ import { ROUTES_PATH} from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store"
 import { ROUTES } from "../constants/routes";
-
 import router from "../app/Router.js";
 
 describe("Given I am connected as an employee", () => {
-  
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
@@ -44,15 +41,13 @@ describe("Given I am connected as an employee", () => {
   describe("when I am on Bills page but it is loading", () => {
     test("Then Loading page should be displayed", () => {
       document.body.innerHTML = BillsUI({ data: bills, loading: true });
-      const loadingMessage = screen.getByTestId("loading");
-      expect(loadingMessage).toBeTruthy();
+      expect(screen.getByTestId("loading")).toBeTruthy();
     });
   });
   describe("When I am on Bills page but back-end sends an error message", () => {
     test("Then Error page should be displayed", () => {
-      document.body.innerHTML = BillsUI({ data: bills, error: true });
-      const errorMessage = screen.getByTestId("error-message");
-      expect(errorMessage).toBeTruthy();
+      document.body.innerHTML = BillsUI({ data: bills, error: 'some error message' });
+      expect(screen.getByTestId("error-message")).toBeTruthy();
     });
   });
 })
@@ -113,26 +108,33 @@ describe("Given I am a user connected as Employee", () => {
         type: 'Employee',
         email: "a@a"
       }))
+      const root = document.createElement("div")
+      root.setAttribute("id", "root")
+      document.body.append(root)
+      router()
        const getSpy = jest.spyOn(mockStore, "bills")
        const bills = await mockStore.bills()
-       expect(getSpy).toHaveBeenCalledTimes(1)
+       expect(getSpy).toHaveBeenCalled()
     })
     test("fetches bills from an API and fails with 404 message error", async () => {
-      mockStore.bills.mockImplementationOnce(() =>
-        Promise.reject(new Error("Erreur 404"))
-
-      )
-      const html = BillsUI({ error: "Erreur 404" })
-      document.body.innerHTML = html
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          list : () =>  {
+            return Promise.reject(new Error("Erreur 500"))
+          }
+        }})
+      document.body.innerHTML = BillsUI({ error: "Erreur 404" })
       const message = await screen.getByText(/Erreur 404/)
       expect(message).toBeTruthy()
     })
     test("fetches messages from an API and fails with 500 message error", async () => {
-      mockStore.bills.mockImplementationOnce(() =>
-        Promise.reject(new Error("Erreur 500"))
-      )
-      const html = BillsUI({ error: "Erreur 500" })
-      document.body.innerHTML = html
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          list : () =>  {
+            return Promise.reject(new Error("Erreur 500"))
+          }
+        }})
+      document.body.innerHTML = BillsUI({ error: "Erreur 500" })
       const message = await screen.getByText(/Erreur 500/)
       expect(message).toBeTruthy()
     })
