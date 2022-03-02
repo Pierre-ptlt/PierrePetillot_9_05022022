@@ -27,7 +27,7 @@ export default class NewBill {
     formData.append('email', email)
     if(fileName.includes(".jpg") || fileName.includes(".jpeg") || fileName.includes (".png"))
     {
-      document.getElementById('btn-send-bill').disabled = false;
+
       this.store
       .bills()
       .create({
@@ -44,8 +44,8 @@ export default class NewBill {
     }
     else
     {
-      document.getElementById('btn-send-bill').disabled = true;
       alert("Veuillez choisir un fichier au format jpg, jpeg ou PNG");
+      return;
     }
   }
   handleSubmit = e => {

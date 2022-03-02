@@ -11,31 +11,10 @@ import {localStorageMock} from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store"
 import { ROUTES } from "../constants/routes";
 import router from "../app/Router.js";
+window.alert = jest.fn();
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
-    test("I am on the NewBill page", () => {
-      const html = NewBillUI()
-      document.body.innerHTML = html
-      expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy()
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname })
-      }
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-      window.localStorage.setItem('user', JSON.stringify({
-        type: 'Employee'
-      }))
-      const store = mockStore;
-      const newBill = new NewBill({
-        document, onNavigate, store, localStorage : window.localStorage
-      })
-      const updateBill = jest.fn(newBill.updateBill(newBill));
-      const uploadButton = screen.getByTestId("file");
-      uploadButton.addEventListener('click', updateBill);
-      fireEvent.click(uploadButton);
-      expect(updateBill).toHaveBeenCalled();
-    })
-
     test("When I want to upload a file, handleChangeFile is called", () =>
     {
       const html = NewBillUI()
