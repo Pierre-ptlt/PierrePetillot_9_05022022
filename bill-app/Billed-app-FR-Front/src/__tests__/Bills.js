@@ -44,7 +44,7 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getByTestId("loading")).toBeTruthy();
     });
   });
-  describe("When I am on Bills page but back-end sends an error message", () => {
+  describe("When I am on Bills page but backend sends an error message", () => {
     test("Then Error page should be displayed", () => {
       document.body.innerHTML = BillsUI({ data: bills, error: 'some error message' });
       expect(screen.getByTestId("error-message")).toBeTruthy();
@@ -53,7 +53,7 @@ describe("Given I am connected as an employee", () => {
 })
 
 describe("Given i am on bills page as an employee",()=>{
-  test("Should call the handleClickNewBill method when i click 'nouvelle note de frais' button",()=>{
+  test("When i click 'nouvelle note de frais' button, the handleClickNewBill method should be called",()=>{
     window.localStorage.setItem('user', JSON.stringify({
       type: 'Employee'
     }))
@@ -73,7 +73,27 @@ describe("Given i am on bills page as an employee",()=>{
     expect(screen.getByTestId('form-new-bill')).toBeTruthy()
   })
 
-  test("Should call the handleClickOnEye method when I click on the eye icon", () => {
+  test("When the page is loaded, the getBills method should be called", () =>
+  {
+    window.localStorage.setItem('user', JSON.stringify({
+      type: 'Employee',
+      email: "a@a"
+    }))
+    document.body.innerHTML = BillsUI({ data: bills })
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname })
+    }
+    const store = mockStore;
+    const bill= new Bills({
+      document, onNavigate, store, localStorage: window.localStorage
+    })
+    const getBills = jest.fn(bill.getBills)
+    window.addEventListener('load', getBills)
+    fireEvent.load(window);
+    expect(getBills).toHaveBeenCalled();
+  })
+
+  test("When I click on the eye icon, the handleClickOnEye method should be called", () => {
     window.localStorage.setItem('user', JSON.stringify({
       type: 'Employee'
     }))
@@ -102,7 +122,8 @@ describe("Given i am on bills page as an employee",()=>{
 // Test d'intégration GET Bills
 
 describe("Given I am a user connected as Employee", () => {
-  describe("When I navigate to BillUI", () => {
+  describe("When I navigate to BillUI", () =>
+  {
     test("fetches bills from mock API GET", async () => {
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee',
@@ -112,9 +133,10 @@ describe("Given I am a user connected as Employee", () => {
       root.setAttribute("id", "root")
       document.body.append(root)
       router()
-       const getSpy = jest.spyOn(mockStore, "bills")
-       const bills = await mockStore.bills()
-       expect(getSpy).toHaveBeenCalled()
+      const getSpy = jest.spyOn(mockStore, "bills")
+      const bills = await mockStore.bills()
+      expect(getSpy).toHaveBeenCalled()
+      expect(bills).toBeTruthy();
     })
     test("fetches bills from an API and fails with 404 message error", async () => {
       mockStore.bills.mockImplementationOnce(() => {
