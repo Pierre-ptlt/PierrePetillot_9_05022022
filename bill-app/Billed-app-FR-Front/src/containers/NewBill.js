@@ -27,7 +27,7 @@ export default class NewBill {
     formData.append('email', email)
     if(fileName.includes(".jpg") || fileName.includes(".jpeg") || fileName.includes (".png"))
     {
-
+      document.getElementById('btn-send-bill').disabled = false;
       this.store
       .bills()
       .create({
@@ -40,7 +40,7 @@ export default class NewBill {
         this.billId = key
         this.fileUrl = fileUrl
         this.fileName = fileName
-      }).catch(error => console.error(error))
+      })
     }
     else
     {

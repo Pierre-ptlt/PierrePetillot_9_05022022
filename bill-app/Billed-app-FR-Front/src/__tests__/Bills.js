@@ -134,9 +134,10 @@ describe("Given I am a user connected as Employee", () => {
       document.body.append(root)
       router()
       const getSpy = jest.spyOn(mockStore, "bills")
-      const bills = await mockStore.bills()
+      const bills = await mockStore.bills().list();
       expect(getSpy).toHaveBeenCalled()
-      expect(bills).toBeTruthy();
+      expect(bills.length).toBe(4);
+      console.log(bills[1].id)
     })
     test("fetches bills from an API and fails with 404 message error", async () => {
       mockStore.bills.mockImplementationOnce(() => {

@@ -3,6 +3,7 @@
  */
 import NewBillUI from "../views/NewBillUI.js"
 import NewBill from "../containers/NewBill.js"
+import BillsUI  from '../views/BillsUI.js'
 import '@testing-library/jest-dom'
 import userEvent from "@testing-library/user-event";
 import {screen, waitFor, getByTestId, fireEvent} from "@testing-library/dom"
@@ -65,39 +66,65 @@ describe("Given I am connected as an employee", () => {
 
 
 // test d'intégration POST
-// describe("Given I am a user connected as an employee", () => {
-//   describe("When I navigate to Bills", () => {
-//     test("add bill to mock API POST", async () => {
-//       const html = NewBillUI()
-//       document.body.innerHTML = html
+describe("Given I am a user connected as an employee", () => {
+  describe("When I navigate to Bills", () => {
+    test("add bill to mock API POST", async () => {
+      const html = NewBillUI()
+      document.body.innerHTML = html
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+     const store = mockStore;
+     const newBill = new NewBill({
+       document, onNavigate, store, localStorage : window.localStorage
+     })
+     const testBill =
+      {
+        "id": "BeKy598729423xZ",
+        "vat": "30",
+        "amount": 150,
+        "name": "test post newbill",
+        "fileName": "15927.jpeg",
+        "commentary": "test post newbill",
+        "pct": 20,
+        "type": "Transports",
+        "email": "a@a",
+        "fileUrl": "https://test.storage.tld/v0/b/billable-677b6.a…61.jpeg?alt=media&token=7685cd61-c112-42bc-9929-8a798b",
+        "date": "2022-02-14",
+        "status": "pending",
+        "commentAdmin": "en fait non"
+      }
 
-//       const onNavigate = (pathname) => {
-//         document.body.innerHTML = ROUTES({ pathname })
-//       }
-//      const testBill =
-//       {
-//         "id": "BeKy598729423xZ",
-//         "vat": "30",
-//         "amount": 150,
-//         "name": "test post newbill",
-//         "fileName": "15927.jpeg",
-//         "commentary": "test post newbill",
-//         "pct": 30,
-//         "type": "Transports",
-//         "email": "a@a",
-//         "fileUrl": "https://test.storage.tld/v0/b/billable-677b6.a…61.jpeg?alt=media&token=7685cd61-c112-42bc-9929-8a798b",
-//         "date": "2022-02-14",
-//         "status": "pending",
-//         "commentAdmin": "en fait non"
-//       }
+      const getSpy = jest.spyOn(mockStore, "bills")
+      const bill = await mockStore.bills().create(testBill);
+      expect(getSpy).toHaveBeenCalledTimes(1)
+      console.log(bill)
+      console.log(bill.bill.id)
+      expect(bill.bill.status).toBe("pending")
+      expect(bill.bill.id).toBe("BeKy598729423xZ")
+    })
+    test("fetches bills from an API and fails with 404 message error", async () => {
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          create : () =>  {
+            return Promise.reject(new Error("Erreur 404"))
+          }
+        }})
 
-//        const getSpy = jest.spyOn(mockStore, "bills") // fonction simulée qui surveille l'appel de la méthode post de l'objet store
-//        const bill = await mockStore.create(testBill)
-//        expect(getSpy).toHaveBeenCalledTimes(1)
-//        expect(bill.status).toBe("pending")
-//        expect(bill.id).toBe("BeKy598729423xZ")
-
-
-//     })
-//   })
-// })
+      document.body.innerHTML = BillsUI({ error: "Erreur 404" })
+      const message = await screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy()
+    })
+    test("fetches messages from an API and fails with 500 message error", async () => {
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          create : () =>  {
+            return Promise.reject(new Error("Erreur 500"))
+          }
+        }})
+      document.body.innerHTML = BillsUI({ error: "Erreur 500" })
+      const message = await screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    })
+  })
+})
