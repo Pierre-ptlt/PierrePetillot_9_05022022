@@ -91,6 +91,8 @@ describe("Given i am on bills page as an employee",()=>{
     window.addEventListener('load', getBills)
     fireEvent.load(window);
     expect(getBills).toHaveBeenCalled();
+    expect(getBills).toBeTruthy();
+    expect(screen.getByText("test1")).toBeTruthy();
   })
 
   test("When I click on the eye icon, the handleClickOnEye method should be called", () => {
