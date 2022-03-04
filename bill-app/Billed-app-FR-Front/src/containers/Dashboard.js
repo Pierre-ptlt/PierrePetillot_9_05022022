@@ -146,7 +146,7 @@ export default class {
     }
 
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).unbind("click")
+      $(`#open-bill${bill.id}`).unbind("click") // On retire le deuxième listener qui se rajoutait à l'ouverture d'une autre catégorie et empêchait de re-cliquer
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 

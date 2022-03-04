@@ -37,7 +37,7 @@ export default class {
         .map(doc => {
             if(doc.date)
             {
-              doc.dateRaw = doc.date.replace(/[^0-9]/g, '');
+              doc.dateRaw = doc.date.replace(/[^0-9]/g, ''); // On ajoute une donnée à la Bill : la date sans tirets
             }
             try {
               return {

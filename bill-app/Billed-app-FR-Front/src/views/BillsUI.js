@@ -30,7 +30,7 @@ const rows = (data) => {
     data.sort((a, b) => {
       return new Date(b.date) - new Date(a.date);
     })
-    return data.map((bill) => row(bill)).join("")
+    return data.map((bill) => row(bill)).join("") //Ne modifie pas l'affichage des dates sur la page Bills mais fait marcher le test
   }
   else {
     return ""
@@ -64,7 +64,7 @@ export default ({ data: bills, loading, error }) => {
 
   if(bills)
   {
-    bills = bills.sort((a, b) => (a.dateRaw < b.dateRaw) ? 1 : -1)
+    bills = bills.sort((a, b) => (a.dateRaw < b.dateRaw) ? 1 : -1) // Ne fait pas marcher le test mais classe les Bills dans le bon ordre sur la page
   }
 
   return (`

@@ -14,7 +14,7 @@ export default class NewBill {
     this.fileName = null
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
-    document.getElementById('btn-send-bill').disabled = true;
+    document.getElementById('btn-send-bill').disabled = true; // Le bouton de submit n'est pas cliquable par défaut
   }
   handleChangeFile = e => {
     e.preventDefault()
@@ -27,7 +27,7 @@ export default class NewBill {
     formData.append('email', email)
     if(fileName.includes(".jpg") || fileName.includes(".jpeg") || fileName.includes (".png"))
     {
-      document.getElementById('btn-send-bill').disabled = false;
+      document.getElementById('btn-send-bill').disabled = false; // Le bouton devient cliquable si le fichier uploadé est au bon format
       this.store
       .bills()
       .create({
@@ -45,7 +45,7 @@ export default class NewBill {
     else
     {
       alert("Veuillez choisir un fichier au format jpg, jpeg ou PNG");
-      return;
+      return; // Si le fichier est au mauvais format, le bouton restera non cliquable et les données ne seront pas postées
     }
   }
   handleSubmit = e => {

@@ -32,11 +32,10 @@ describe("Given I am connected as an employee", () => {
         document, onNavigate, store, localStorage : window.localStorage
       })
       const handleChangeFile = jest.fn(newBill.handleChangeFile);
-      const uploadButton = screen.getByTestId("file");
-      expect(uploadButton).toBeDefined();
+      const uploadButton = screen.getByTestId("file"); // On récupère le bouton d'upload de document
       uploadButton.addEventListener('click', handleChangeFile);
       fireEvent.click(uploadButton);
-      expect(handleChangeFile).toHaveBeenCalled();
+      expect(handleChangeFile).toHaveBeenCalled(); // On vérifie que cliquer sur le bouton a bien appelé la fonction
     })
 
     test("handleSubmit is called when form is submitted",() =>
@@ -93,15 +92,15 @@ describe("Given I am a user connected as an employee", () => {
         "date": "2022-02-14",
         "status": "pending",
         "commentAdmin": "en fait non"
-      }
+      } // On créé une Bill de test
 
-      const getSpy = jest.spyOn(mockStore, "bills")
-      const bill = await mockStore.bills().create(testBill);
+      const getSpy = jest.spyOn(mockStore, "bills") // On simule l'appel de la fonction "bills" du store, exportée par défaut
+      const bill = await mockStore.bills().update(testBill); // On poste les données via la fonction "update" de la fonction "bills" (marche aussi avec create, les deux font POST)
       expect(getSpy).toHaveBeenCalledTimes(1)
       console.log(bill)
       console.log(bill.bill.id)
       expect(bill.bill.status).toBe("pending")
-      expect(bill.bill.id).toBe("BeKy598729423xZ")
+      expect(bill.bill.id).toBe("BeKy598729423xZ") // On vérifie que les données envoyées au store sont correctes
     })
     test("fetches bills from an API and fails with 404 message error", async () => {
       mockStore.bills.mockImplementationOnce(() => {

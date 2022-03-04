@@ -63,14 +63,14 @@ describe("Given i am on bills page as an employee",()=>{
     }
     const store = null;
     const bill= new Bills({
-      document, onNavigate, store, localStorage: window.localStorage
+      document, onNavigate, store, localStorage: window.localStorage // setup des variables de test
     })
-    const handleClickNewBill = jest.fn(bill.handleClickNewBill)
-    const btnNewBill = screen.getByTestId('btn-new-bill')
+    const handleClickNewBill = jest.fn(bill.handleClickNewBill) //recuperation de la fonction dans l'objet Bills créé au dessus
+    const btnNewBill = screen.getByTestId('btn-new-bill') // recuperation du bouton
     expect(btnNewBill).toBeTruthy()
-    btnNewBill.addEventListener('click', handleClickNewBill)
-    fireEvent.click(btnNewBill)
-    expect(screen.getByTestId('form-new-bill')).toBeTruthy()
+    btnNewBill.addEventListener('click', handleClickNewBill) // Cliquer sur le bouton lancera la fonction d'affichage du formulaire
+    fireEvent.click(btnNewBill) // On clique sur le bouton
+    expect(screen.getByTestId('form-new-bill')).toBeTruthy() // On vérifie que le formulaire NewBill est bien affiché
   })
 
   test("When the page is loaded, the getBills method should be called", () =>
@@ -88,18 +88,17 @@ describe("Given i am on bills page as an employee",()=>{
       document, onNavigate, store, localStorage: window.localStorage
     })
     const getBills = jest.fn(bill.getBills)
-    window.addEventListener('load', getBills)
-    fireEvent.load(window);
+    window.addEventListener('load', getBills) // La fonction se lance au chargement de la page
+    fireEvent.load(window); // La page se charge
     expect(getBills).toHaveBeenCalled();
     expect(getBills).toBeTruthy();
-    expect(screen.getByText("test1")).toBeTruthy();
+    expect(screen.getByText("test1")).toBeTruthy(); // On vérifie que les Bills du mockStore sont bien affichées
   })
 
   test("When I click on the eye icon, the handleClickOnEye method should be called", () => {
     window.localStorage.setItem('user', JSON.stringify({
       type: 'Employee'
     }))
-    $.fn.modal = jest.fn();
     document.body.innerHTML = BillsUI({ data: bills })
     const onNavigate = (pathname) => {
       document.body.innerHTML = ROUTES({ pathname })
@@ -108,16 +107,17 @@ describe("Given i am on bills page as an employee",()=>{
     const bill= new Bills({
       document, onNavigate, store, localStorage: window.localStorage
     })
-    const allIconEye = screen.getAllByTestId('icon-eye')
+    $.fn.modal = jest.fn(); // Sert à éviter l'erreur $(...).modal is not a function
+    const allIconEye = screen.getAllByTestId('icon-eye') // On récupère toutes les icones oeil de la page
     expect(allIconEye).toBeTruthy()
-    const iconEye = allIconEye[0]
+    const iconEye = allIconEye[0] // On récupère la première icone oeil
     console.log(iconEye)
     const handleClickIconEye = jest.fn(bill.handleClickIconEye(iconEye))
     iconEye.addEventListener('click', handleClickIconEye)
     expect(iconEye).toBeTruthy()
     fireEvent.click(iconEye)
     expect(handleClickIconEye).toHaveBeenCalled()
-    expect(screen.getByTestId("modal-title")).toBeTruthy()
+    expect(screen.getByTestId("modal-title")).toBeTruthy() // On vérifie que la modale d'affichage du document s'est bien ouverte
   })
 });
 
@@ -135,10 +135,10 @@ describe("Given I am a user connected as Employee", () => {
       root.setAttribute("id", "root")
       document.body.append(root)
       router()
-      const getSpy = jest.spyOn(mockStore, "bills")
-      const bills = await mockStore.bills().list();
+      const getSpy = jest.spyOn(mockStore, "bills") // On simule la fonction "bills" du store (exportée par défaut)
+      const bills = await mockStore.bills().list(); // On récupère le contenu de l'objet list de la fonction bills du store
       expect(getSpy).toHaveBeenCalled()
-      expect(bills.length).toBe(4);
+      expect(bills.length).toBe(4); // On vérifie qu'il y'a bien les 4 Bills du store
       console.log(bills[1].id)
     })
     test("fetches bills from an API and fails with 404 message error", async () => {
